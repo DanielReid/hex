@@ -74,6 +74,16 @@ define([], function() {
                     }
                     return cells;
                 };
+                this.distance = function(fromCoords, toCoords) {
+                    var qrFrom = coords_qr(fromCoords);
+                    var qrTo = coords_qr(toCoords);
+                    var q1 = qrFrom.q;
+                    var r1 = qrFrom.r;
+                    var q2 = qrTo.q;
+                    var r2 = qrTo.r;
+                    return (Math.abs(q1 - q2) + Math.abs(r1 - r2)
+                          + Math.abs(q1 + r1 - q2 - r2)) / 2;
+                };
 		this.cartesian = function(coords) {
 			var qr = coords_qr(coords);
 			return {'x': Math.sqrt(3) * (qr.r + qr.q / 2), 'y': 3/2 * qr.q};

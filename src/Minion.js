@@ -17,5 +17,8 @@ define([], function() {
 			}
 			return move;
 		};
+                this.selectTarget = function(board) {
+                    
+                };
 	};
 });

@@ -18,66 +18,90 @@ define(['jasmine', 'src/HexGrid'], function(jasmine, HexGrid) {
 			expect(it.bounds).toEqual({'q': [-2, -1], 'r': [1, 3]});
 		});
 
-		describe('cells()', function() {
-			it('should StopIteration immediately when empty', function() {
-				var it = new HexGrid(0, []).cells();
-				expect(it.next).toThrow(StopIteration);
-			});
-			it('should return the first cell', function() {
-				var it = new HexGrid(0, [{min_r: 0, cells: ['A', 'Z']}]).cells();
-				expect(it.next()).toBe('A');
-			});
-			it('should return the cells of the first row', function() {
-				var it = new HexGrid(0, [{min_r: 0, cells: ['Z', 'A']}]).cells();
-				expect(it.next()).toBe('Z');
-				expect(it.next()).toBe('A');
-				expect(it.next).toThrow(StopIteration);
-			});
-			it('should continue to the second row', function() {
-				var it = new HexGrid(0, [
-					{min_r: 0, cells: ['Z']},
-					{min_r: 0, cells: ['Q']}
-				]).cells();
-				expect(it.next()).toBe('Z');
-				expect(it.next()).toBe('Q');
-				expect(it.next).toThrow(StopIteration);
-			});
-			it('should read jagged array', function() {
-				var it = new HexGrid(0, [
-					{min_r: 0, cells: ['Z']},
-					{min_r: 0, cells: ['Q', 'R']}
-				]).cells();
-				expect(it.next()).toBe('Z');
-				expect(it.next()).toBe('Q');
-				expect(it.next()).toBe('R');
-				expect(it.next).toThrow(StopIteration);
-			});
-		});
-                
-                describe('neighbours()', function() {
-                    var grid = new HexGrid(0, [
-                        { min_r:  0, cells: [11, 12, 13, 14, 15] },
-                        { min_r:  0, cells:   [21, 22, 23, 24, 25] },
-                        { min_r: -1, cells: [31, 32, 33, 34, 35] },
-                        { min_r: -1, cells:   [41, 42, 43, 44, 45] },
-                        { min_r: -2, cells: [51, 52, 53, 54, 55] }
-                    ]);
-                    it('size=0 should return the cell itself', function() {
-                        expect(grid.neighbours({qr: [0, 0]}, 0)).toEqual([11]);
-                        expect(grid.neighbours({qr: [4, -1]}, 0)).toEqual([52]);
-                    });
-                    it('size=1 should return the cells at distance <= 1', function() {
-                        expect(Array.sort(grid.neighbours({qr: [2, 1]}, 1))).toEqual(
-                            [22, 23, 32, 33, 34, 42, 43]);
-                        expect(Array.sort(grid.neighbours({qr: [1, 0]}, 1))).toEqual(
-                            [11, 12, 21, 22, 31, 32]);
-                        expect(Array.sort(grid.neighbours({qr: [0, 0]}, 1))).toEqual(
-                            [11, 12, 21]);
-                    });
-                    it('size=2 should return the cells at distance <= 2', function() {
-                        expect(Array.sort(grid.neighbours({qr: [4, 2]}, 2))).toEqual(
-                            [34, 35, 43, 44, 45, 53, 54, 55]);
-                    });
+        describe('cells()', function() {
+                it('should StopIteration immediately when empty', function() {
+                        var it = new HexGrid(0, []).cells();
+                        expect(it.next).toThrow(StopIteration);
                 });
-	});
+                it('should return the first cell', function() {
+                        var it = new HexGrid(0, [{min_r: 0, cells: ['A', 'Z']}]).cells();
+                        expect(it.next()).toBe('A');
+                });
+                it('should return the cells of the first row', function() {
+                        var it = new HexGrid(0, [{min_r: 0, cells: ['Z', 'A']}]).cells();
+                        expect(it.next()).toBe('Z');
+                        expect(it.next()).toBe('A');
+                        expect(it.next).toThrow(StopIteration);
+                });
+                it('should continue to the second row', function() {
+                        var it = new HexGrid(0, [
+                                {min_r: 0, cells: ['Z']},
+                                {min_r: 0, cells: ['Q']}
+                        ]).cells();
+                        expect(it.next()).toBe('Z');
+                        expect(it.next()).toBe('Q');
+                        expect(it.next).toThrow(StopIteration);
+                });
+                it('should read jagged array', function() {
+                        var it = new HexGrid(0, [
+                                {min_r: 0, cells: ['Z']},
+                                {min_r: 0, cells: ['Q', 'R']}
+                        ]).cells();
+                        expect(it.next()).toBe('Z');
+                        expect(it.next()).toBe('Q');
+                        expect(it.next()).toBe('R');
+                        expect(it.next).toThrow(StopIteration);
+                });
+        });
+                
+        describe('neighbours()', function() {
+            var grid = new HexGrid(0, [
+                { min_r:  0, cells: [11, 12, 13, 14, 15] },
+                { min_r:  0, cells:   [21, 22, 23, 24, 25] },
+                { min_r: -1, cells: [31, 32, 33, 34, 35] },
+                { min_r: -1, cells:   [41, 42, 43, 44, 45] },
+                { min_r: -2, cells: [51, 52, 53, 54, 55] }
+            ]);
+            it('size=0 should return the cell itself', function() {
+                expect(grid.neighbours({qr: [0, 0]}, 0)).toEqual([11]);
+                expect(grid.neighbours({qr: [4, -1]}, 0)).toEqual([52]);
+            });
+            it('size=1 should return the cells at distance <= 1', function() {
+                expect(Array.sort(grid.neighbours({qr: [2, 1]}, 1))).toEqual(
+                    [22, 23, 32, 33, 34, 42, 43]);
+                expect(Array.sort(grid.neighbours({qr: [1, 0]}, 1))).toEqual(
+                    [11, 12, 21, 22, 31, 32]);
+                expect(Array.sort(grid.neighbours({qr: [0, 0]}, 1))).toEqual(
+                    [11, 12, 21]);
+            });
+            it('size=2 should return the cells at distance <= 2', function() {
+                expect(Array.sort(grid.neighbours({qr: [4, 2]}, 2))).toEqual(
+                    [34, 35, 43, 44, 45, 53, 54, 55]);
+            });
+        });
+        describe ('distance()', function() {
+            var grid = new HexGrid(0, [
+                { min_r:  0, cells: [11, 12, 13, 14, 15] },
+                { min_r:  0, cells:   [21, 22, 23, 24, 25] },
+                { min_r: -1, cells: [31, 32, 33, 34, 35] },
+                { min_r: -1, cells:   [41, 42, 43, 44, 45] },
+                { min_r: -2, cells: [51, 52, 53, 54, 55] }
+            ]);
+            it('distance from cell to self should be 0', function() {
+                expect(grid.distance({qr: [2, 1]}, {qr: [2, 1]})).toBe(0);
+                expect(grid.distance({qr: [0, 0]}, {qr: [0, 0]})).toBe(0);
+            });
+            it('Horizontal distances (both ways)', function() {
+               expect(grid.distance({qr: [0, 1]}, {qr: [0, 4]})).toBe(3);
+            });
+            it('Diagonal distances from the centre (both ways)', function() {
+                expect(grid.distance({qr: [2, 1]}, {qr: [0, 0]})).toBe(3);
+                expect(grid.distance({qr: [0, 0]}, {qr: [2, 1]})).toBe(3);
+            });
+            it('distance from top-left to bottom-right should be 6', function() {
+                expect(grid.distance({qr: [-2, -2]}, {qr: [0, 4]})).toBe(6);
+                expect(grid.distance({qr: [0, 0]}, {qr: [2, 2]})).toBe(6);
+            }); 
+        });
+    });
 });
